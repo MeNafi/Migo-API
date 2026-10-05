@@ -1,0 +1,116 @@
+enum Role {
+  PASSENGER
+  COMMUTER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  BLOCKED
+}
+
+enum VerificationType {
+  IDENTITY
+  VEHICLE
+  LICENSE
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RESUBMISSION_REQUESTED
+}
+
+enum VehicleType {
+  CAR
+  BIKE
+  MICROBUS
+  SUV
+  OTHER
+}
+
+enum RouteStatus {
+  ACTIVE
+  PAUSED
+  INACTIVE
+}
+
+enum RideRequestStatus {
+  OPEN
+  MATCHED
+  ACCEPTED
+  CANCELLED
+  EXPIRED
+}
+
+enum MatchStatus {
+  SUGGESTED
+  SELECTED
+  REQUESTED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum RideStatus {
+  REQUESTED
+  ACCEPTED
+  CONFIRMED
+  ARRIVING
+  STARTED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  REJECTED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum ReportStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  ESCALATED
+  RESOLVED
+  CLOSED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum NotificationType {
+  RIDE_REQUEST
+  RIDE_ACCEPTED
+  RIDE_REJECTED
+  RIDE_STARTED
+  RIDE_COMPLETED
+  RIDE_CANCELLED
+  PAYMENT
+  VERIFICATION
+  CHAT
+  SYSTEM
+  SAFETY
+}

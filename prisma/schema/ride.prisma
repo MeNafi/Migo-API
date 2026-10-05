@@ -1,0 +1,86 @@
+model Ride {
+  id             String          @id @default(uuid())
+  requestId      String?
+  matchId        String?
+  routeId        String
+  commuterId     String
+  status         RideStatus      @default(REQUESTED)
+  date           DateTime        @db.Date
+  departureTime  String
+  seats          Int
+  contributionBdt Float
+  currency       String          @default("BDT")
+  otpCode        String?
+  otpExpiresAt   DateTime?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  cancelReason   String?
+  cancelledById  String?
+  noShowBy       String?
+  notes          String?
+  shareToken     String?         @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  request        RideRequest?    @relation(fields: [requestId], references: [id])
+  match          RideMatch?      @relation(fields: [matchId], references: [id])
+  route          CommuterRoute   @relation(fields: [routeId], references: [id])
+  commuter       User            @relation("CommuterRides", fields: [commuterId], references: [id])
+  passengers     RidePassenger[]
+  locations      RideLocation[]
+  timeline       RideEvent[]
+  payments       Payment[]
+  reviews        Review[]
+  conversation   Conversation?
+
+  @@index([commuterId, status])
+  @@index([status, date])
+  @@map("rides")
+}
+
+model RidePassenger {
+  id          String  @id @default(uuid())
+  rideId      String
+  passengerId String
+  seats       Int     @default(1)
+  pickupName  String?
+  pickupLat   Float?
+  pickupLng   Float?
+  dropName    String?
+  dropLat     Float?
+  dropLng     Float?
+  status      String  @default("CONFIRMED")
+  createdAt   DateTime @default(now())
+  ride        Ride    @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  passenger   User    @relation(fields: [passengerId], references: [id])
+
+  @@unique([rideId, passengerId])
+  @@map("ride_passengers")
+}
+
+model RideLocation {
+  id         String   @id @default(uuid())
+  rideId     String
+  lat        Float
+  lng        Float
+  heading    Float?
+  speed      Float?
+  recordedAt DateTime @default(now())
+  ride       Ride     @relation(fields: [rideId], references: [id], onDelete: Cascade)
+
+  @@index([rideId, recordedAt])
+  @@map("ride_locations")
+}
+
+model RideEvent {
+  id        String   @id @default(uuid())
+  rideId    String
+  type      String
+  actorId   String?
+  payload   Json?
+  createdAt DateTime @default(now())
+  ride      Ride     @relation(fields: [rideId], references: [id], onDelete: Cascade)
+
+  @@index([rideId, createdAt])
+  @@map("ride_events")
+}

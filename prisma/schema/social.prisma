@@ -1,0 +1,182 @@
+model Payment {
+  id             String        @id @default(uuid())
+  rideId         String
+  payerId        String
+  amount         Float
+  currency       String        @default("BDT")
+  status         PaymentStatus @default(PENDING)
+  method         String?
+  gateway        String        @default("SSLCOMMERZ")
+  tranId         String        @unique
+  valId          String?
+  gatewaySession String?
+  gatewayUrl     String?
+  idempotencyKey String?       @unique
+  rawResponse    Json?
+  paidAt         DateTime?
+  failedAt       DateTime?
+  refundedAt     DateTime?
+  refundAmount   Float?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  ride           Ride          @relation(fields: [rideId], references: [id])
+  payer          User          @relation(fields: [payerId], references: [id])
+
+  @@index([payerId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rideId    String
+  authorId  String
+  targetId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ride      Ride     @relation(fields: [rideId], references: [id])
+  author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target    User     @relation("ReviewTarget", fields: [targetId], references: [id])
+
+  @@unique([rideId, authorId, targetId])
+  @@map("ratings_reviews")
+}
+
+model Conversation {
+  id            String    @id @default(uuid())
+  rideId        String?   @unique
+  participantA  String
+  participantB  String
+  lastMessageAt DateTime?
+  createdAt     DateTime  @default(now())
+  ride          Ride?     @relation(fields: [rideId], references: [id])
+  userA         User      @relation("ConversationA", fields: [participantA], references: [id])
+  userB         User      @relation("ConversationB", fields: [participantB], references: [id])
+  messages      Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+model Report {
+  id           String       @id @default(uuid())
+  reporterId   String
+  targetUserId String?
+  rideId       String?
+  messageId    String?
+  category     String
+  description  String
+  evidenceUrls Json?
+  status       ReportStatus @default(OPEN)
+  resolution   String?
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  reporter     User         @relation("ReportAuthor", fields: [reporterId], references: [id])
+
+  @@index([status])
+  @@map("reports")
+}
+
+model Dispute {
+  id         String        @id @default(uuid())
+  reportId   String?
+  rideId     String?
+  paymentId  String?
+  type       String
+  status     DisputeStatus @default(OPEN)
+  assigneeId String?
+  decision   String?
+  reason     String?
+  evidence   Json?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([status])
+  @@map("disputes")
+}
+
+model SupportTicket {
+  id          String       @id @default(uuid())
+  userId      String
+  subject     String
+  category    String
+  description String
+  status      TicketStatus @default(OPEN)
+  assigneeId  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("support_tickets")
+}
+
+model Incident {
+  id          String   @id @default(uuid())
+  title       String
+  severity    String
+  description String
+  status      String   @default("OPEN")
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("incidents")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  action     String
+  targetType String
+  targetId   String
+  before     Json?
+  after      Json?
+  reason     String?
+  ip         String?
+  createdAt  DateTime @default(now())
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
+
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value Json
+
+  @@map("system_settings")
+}

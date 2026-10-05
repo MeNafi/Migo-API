@@ -1,0 +1,113 @@
+model CommuterRoute {
+  id              String              @id @default(uuid())
+  ownerId         String
+  vehicleId       String?
+  title           String?
+  originName      String
+  originLat       Float
+  originLng       Float
+  destinationName String
+  destinationLat  Float
+  destinationLng  Float
+  polyline        String?
+  distanceKm      Float?
+  durationMin     Int?
+  seats           Int
+  contributionBdt Float
+  currency        String              @default("BDT")
+  status          RouteStatus         @default(ACTIVE)
+  notes           String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  owner           User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  vehicle         Vehicle?            @relation(fields: [vehicleId], references: [id])
+  schedules       RouteSchedule[]
+  availabilities  RouteAvailability[]
+  matches         RideMatch[]
+  rides           Ride[]
+
+  @@index([ownerId, status])
+  @@map("routes")
+}
+
+model RouteSchedule {
+  id            String         @id @default(uuid())
+  routeId       String
+  daysOfWeek    Int[]
+  departureTime String
+  returnTime    String?
+  effectiveFrom DateTime?
+  effectiveTo   DateTime?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  route         CommuterRoute  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@index([routeId])
+  @@map("route_schedules")
+}
+
+model RouteAvailability {
+  id          String        @id @default(uuid())
+  routeId     String
+  date        DateTime      @db.Date
+  isAvailable Boolean
+  seats       Int?
+  note        String?
+  createdAt   DateTime      @default(now())
+  route       CommuterRoute @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@unique([routeId, date])
+  @@map("route_availabilities")
+}
+
+model RideRequest {
+  id              String            @id @default(uuid())
+  passengerId     String
+  pickupName      String
+  pickupLat       Float
+  pickupLng       Float
+  destinationName String
+  destinationLat  Float
+  destinationLng  Float
+  date            DateTime          @db.Date
+  time            String
+  seats           Int               @default(1)
+  notes           String?
+  isRecurring     Boolean           @default(false)
+  recurringDays   Int[]             @default([])
+  status          RideRequestStatus @default(OPEN)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  passenger       User              @relation(fields: [passengerId], references: [id], onDelete: Cascade)
+  matches         RideMatch[]
+  rides           Ride[]
+
+  @@index([passengerId, status])
+  @@map("ride_requests")
+}
+
+model RideMatch {
+  id                String        @id @default(uuid())
+  requestId         String
+  routeId           String
+  score             Float
+  routeSimilarity   Float
+  pickupProximity   Float
+  destProximity     Float
+  timeCompatibility Float
+  scheduleOverlap   Float
+  estimatedPickupKm Float
+  estimatedDestKm   Float
+  contributionBdt   Float
+  status            MatchStatus   @default(SUGGESTED)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  request           RideRequest   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  route             CommuterRoute @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  rides             Ride[]
+
+  @@unique([requestId, routeId])
+  @@index([requestId])
+  @@map("ride_matches")
+}
