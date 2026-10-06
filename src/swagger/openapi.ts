@@ -43,3 +43,4 @@ export const openApiSpec = {
     "/admin/audit-logs": { get: { tags: ["Admin"], summary: "Audit logs" } },
   },
 };
+
