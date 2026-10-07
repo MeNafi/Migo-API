@@ -28,3 +28,4 @@ export const timeCompatibility = (requested: string, available: string, maxMinut
 export const dayOfWeekFromDate = (date: Date | string) => {
   return new Date(date).getUTCDay();
 };
+
