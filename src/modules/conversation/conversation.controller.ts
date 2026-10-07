@@ -50,3 +50,4 @@ const report = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const conversationController = { list, open, get, messages, send, read, report };
+
