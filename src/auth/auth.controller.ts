@@ -182,3 +182,4 @@ export const authController = {
   resetPassword,
   changePassword,
 };
+
