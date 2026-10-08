@@ -75,3 +75,4 @@ export const confirmEmailSchema = z.object({
     token: z.string().min(6),
   }),
 });
+
