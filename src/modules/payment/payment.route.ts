@@ -21,3 +21,5 @@ router.post("/:paymentId/validate", admin, paymentController.validate);
 router.post("/:paymentId/refund", admin, paymentController.refund);
 
 export const paymentRoutes = router;
+
+
