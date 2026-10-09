@@ -4,7 +4,7 @@ Smart daily ride-sharing API. Express + TypeScript + Prisma + PostgreSQL.
 
 Folder layout follows the Project-Prisma style: `src/app.ts`, `src/server.ts`, `src/config`, `src/middlewares`, `src/utils`, `src/modules/<domain>/{route,controller,service}`, split Prisma schema under `prisma/schema`.
 
-## Install
+## Install 
 
 ```bash
 cd migo-backend
