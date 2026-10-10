@@ -63,7 +63,7 @@ A production-oriented ride-sharing backend designed for Dhaka, Bangladesh. Migo 
 ## 🚀 Live API
 
 > ▲ **Deployed on Vercel**  
-> Access the live FixOra REST API deployed and hosted on Vercel.
+> Access the live Migo REST API deployed and hosted on Vercel.
 
 > [![Live API](https://img.shields.io/badge/Live%20API-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://migo-tau.vercel.app/)
 
