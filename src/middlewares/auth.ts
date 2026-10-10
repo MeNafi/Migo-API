@@ -30,7 +30,10 @@ export const auth = (...requiredRoles: Role[]) => {
       throw new AppError(httpStatus.FORBIDDEN, "Forbidden. You don't have permission to access this resource");
     }
 
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: { profile: true },
+    });
     if (!user) {
       throw new AppError(httpStatus.UNAUTHORIZED, "User not found. Please log in again.");
     }
@@ -44,10 +47,10 @@ export const auth = (...requiredRoles: Role[]) => {
     req.user = {
       id: user.id,
       email: user.email,
-      name: user.profile ? undefined : (verifiedToken.data as JwtPayload).name,
+      name: user.profile?.fullName || (verifiedToken.data as JwtPayload).name || "Migo User",
       role: user.role,
-    } as Express.Request["user"];
-
+    }; 
+    
     const profile = await prisma.profile.findUnique({ where: { userId: user.id } });
     req.user = {
       id: user.id,
