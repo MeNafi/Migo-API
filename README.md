@@ -19,6 +19,7 @@ A production-oriented ride-sharing backend designed for Dhaka, Bangladesh. Migo 
 [![Zod](https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)](https://zod.dev/)
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white)](https://socket.io/)
 [![Stripe](https://img.shields.io/badge/Stripe-6366F1?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com/)
+[![SSLCOMMERZ](https://img.shields.io/badge/SSLCOMMERZ-00AEEF?style=for-the-badge&logo=sslcommerz&logoColor=white)](https://sslcommerz.com/)
 [![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://www.postman.com/)
 [![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
 
